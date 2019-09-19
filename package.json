@@ -1,0 +1,36 @@
+{
+  "name": "7arakat",
+  "version": "1.0.0",
+  "description": "A web app for 7arakat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "back": "cd back && npm start",
+    "front": "cd front && npm start",
+    "start": "concurrently --kill-others-on-fail --names \"back,front\" \"npm run back\" \"npm run front\"",
+    "postinstall":"cd front && npm install && cd .. && cd back && npm install"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HovigKevorkian/7arakat.git"
+  },
+  "author": "codi_team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HovigKevorkian/7arakat/issues"
+  },
+  "homepage": "https://github.com/HovigKevorkian/7arakat#readme",
+  "dependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/node": "^7.6.1",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/register": "^7.6.0",
+    "concurrently": "^4.1.2",
+    "nodemon": "^1.19.2",
+    "rimraf": "^3.0.0"
+  }
+}
+
+
