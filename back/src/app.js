@@ -11,7 +11,7 @@ const app = express(); // create a new app
 const IS_PRODUCTION = app.get('env') === 'production'
 
 if (IS_PRODUCTION) {
-  app.set('trust proxy', 1) // secures the app if it is running behind Nginx/Apache/similar
+  app.set('trust proxy', 1) // secures the app if it is running behind Nginx/Apache/simila
 }
 app.use(cors()); // allows cross domain requests
 app.use(express.json()); // allows POST requests with JSON
