@@ -40,7 +40,7 @@ const start = async () => {
    * Route that returns a list of contacts
    * @module contacts/list
    * @param {Express.Request} req - request
-   * @param {Express.Response} res - response
+   * @param {Express.Response} res - response 
    * @return {json} rows - array of contacts
    */
   // app.get("/gallery", async (req, res, next) => {
