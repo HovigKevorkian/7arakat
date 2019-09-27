@@ -28,7 +28,8 @@
     "@babel/register": "^7.6.0",
     "concurrently": "^4.1.2",
     "nodemon": "^1.19.2",
-    "rimraf": "^3.0.0"
+    "rimraf": "^3.0.0",
+    "sqlite": "^3.0.3"
   },
   "devDependencies": {
     "nodemon": "^1.19.2"
