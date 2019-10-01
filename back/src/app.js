@@ -6,6 +6,7 @@ import cors from 'cors' // allows cross-domain requests
 import createError from 'http-errors' // better JS errors
 import path from 'path'
 
+
 const app = express(); // create a new app
 
 const IS_PRODUCTION = app.get('env') === 'production'
