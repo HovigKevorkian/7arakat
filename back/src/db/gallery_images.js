@@ -38,7 +38,7 @@ const nowForSQLite = () => new Date().toISOString().replace('T',' ').replace('Z'
 
   const getImage = async id => {
     try {
-      let stmt = `SELECT id AS id, image_name FROM gallery_images where id = ${id}`;
+      let stmt = `SELECT gallery_images_id AS id, image_name FROM gallery_images where gallery_images_id = ${id}`;
 
       const rows = await db.all(stmt);
 
@@ -55,10 +55,10 @@ const nowForSQLite = () => new Date().toISOString().replace('T',' ').replace('Z'
     const deleteGalleryImages = async (id)  => {
         try {
           const result = await db.run(
-            SQL`Delete FROM gallery_images where id = ${id}`
+            SQL`Delete FROM gallery_images where gallery_images_id = ${id}`
           );
           if (result.stmt.changes === 0) {
-            throw new Error(`could not delete image with id = ${id} or wrong id`);
+            throw new Error(`could not delete image with gallery_images_id = ${id} or wrong id`);
           }
           return true;
         } catch (err) {
@@ -87,12 +87,11 @@ const nowForSQLite = () => new Date().toISOString().replace('T',' ').replace('Z'
 
   
       const updateGalleryImages = async (id,  imageName) => {
-         
+        try {
         if (!id || !(id ||  imageName) || !imageName) {
           throw new Error("you must provide an id or an imageName");
-        }
-        try {
-          const stmt = SQL`UPDATE gallery_images SET image_name=(${imageName}) WHERE id=(${id})`;
+        };
+          const stmt = SQL`UPDATE gallery_images SET image_name=(${imageName}) WHERE gallery_images_id=(${id})`;
           const result = await db.all(stmt);
           return (result);
         } catch (err) {

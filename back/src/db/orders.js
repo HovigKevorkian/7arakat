@@ -18,98 +18,91 @@ const nowForSQLite = () => new Date().toISOString().replace('T', ' ').replace('Z
 
 
 
-const initializeProducts = async () => {
+const initializeOrders = async () => {
  const db =  await sqlite.open("./harakat.sqlite");
  
-  const getProductsList = async () => {
+  const getOrdersList = async () => {
     try {
-        let stmt = SQL`SELECT  * FROM products`;
+        let stmt = SQL`SELECT  * FROM orders`;
       const rows = await db.all(stmt);
       if (!rows) {
-        throw new Error(` There are no products to display`);
+        throw new Error(` There are no orders to display`);
       } else return rows;
     } catch (err) {
-      throw new Error(`could not get the products list ` + err.message);
+      throw new Error(`could not get the orders list ` + err.message);
     }
 };
 
 
-const getProduct = async id => {
+const getOrder = async id => {
 try {
-  let stmt = `SELECT *  FROM products where  id = ${id}`;
+  let stmt = `SELECT *  FROM orders where  order_id = ${id}`;
   const rows = await db.all(stmt);
-  const products = rows[0];
+  const products = rows;
   if (!products) {
-    throw new Error(` product with id = ${id} doesnt exist`);
+    throw new Error(` order with id = ${id} doesnt exist`);
   } else return products;
 } catch (err) {
-  throw new Error(`could not get the product with id = ${id}` + err.message);
+  throw new Error(`could not get the order with id = ${id}` + err.message);
 };
 };
 
-const deleteProducts = async (id)  => {
+const deleteOrders = async (id)  => {
     try {
       const result = await db.run(
-        SQL`Delete FROM products where id = ${id}`
+        SQL`Delete FROM orders where order_id = ${id}`
       );
       if (result.stmt.changes === 0) {
-        throw new Error(`could not delete product with id = ${id} or wrong id`);
+        throw new Error(`could not delete order with id = ${id} or wrong id`);
       }
       return true;
     } catch (err) {
-      throw new Error("could not delete the product");
+      throw new Error("could not delete the order");
     }
   };
 
-  const updateProducts = async (id,  props) => {
-    const { title, image_name, price, description, category_id, is_featured} = props;
+  const updateOrders = async (id,  props) => {
+    const { user_id, status, delivery_date } = props
     try {
     if (!id || !(id ||  !props) || !props) {
       throw new Error("you must provide an id and/or one of the inputs");
     }
-    const date = nowForSQLite();
-      const stmt = `UPDATE products SET date=("${date}"), title=("${title}"), image_name=("${image_name}"), price=(${price}), description=("${description}"), category_id=(${category_id}), is_featured=(${is_featured}) WHERE id=(${id})`;
-      console.log(stmt)
+    const newDate = nowForSQLite();
+      const stmt = `UPDATE orders SET user_id=(${user_id}), date=("${newDate}"), status=("${status}"), delivery_date=("${delivery_date}") where order_id=(${id})`;
       const result = await db.all(stmt);
       return (result);
     } catch (err) {
-        throw new Error("Can't update the product details")
+        throw new Error("Can't update the order details")
     }
 };
 
 
 
-  const createProducts = async (props) => {
-    const { title, image_name, price, description, category_id, is_featured} = props;
-   // console.log("createC", props)
+  const createOrders = async (props) => {
+    const { user_id, status, delivery_date } = props
     try {
-    if (!props  || !title || !price ||!image_name || !description || ! category_id || !is_featured) {
+    if (!props) {
       throw new Error("you must provide all the fields");
     }
       const date = nowForSQLite();
-      const stmt = `INSERT INTO products (date, title, image_name, price, description, category_id, is_featured) VALUES ("${date}", "${title}", "${image_name}", ${price}, "${description}", ${category_id}, ${is_featured})`;
-      // const stmt =  `INSERT INTO products (date, title, image_name, price, descripition, category_id, is_featured)
-      // VALUES (${'2025-12-12'}, ${'Hello world'}, ${'jsdja'}, ${21}, ${'s21312'},${1}, ${'1'})`;
+      const stmt = `INSERT INTO orders (user_id, date, status, delivery_date) VALUES (${user_id}, "${date}", "${status}", "${delivery_date}")`;
       console.log(stmt)
       const rows = await db.run(stmt);
-     // console.log("results:", rows)
-     // console.log("error:", err.message);
       const id = rows.stmt.lastID;
       return id;
     }catch(err){
-      throw new Error(err," cannot insert product");
+      throw new Error(err," cannot insert order");
     };
 }
-
   
 
   const controller = {
-    getProductsList,
-    getProduct,
-    createProducts,
-    deleteProducts,
-    updateProducts,
+    getOrdersList,
+    getOrder,
+    createOrders,
+    deleteOrders,
+    updateOrders,
   };
   return controller;
 };
-export default initializeProducts;
+export default initializeOrders;

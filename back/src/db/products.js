@@ -36,7 +36,7 @@ const initializeProducts = async () => {
 
 const getProduct = async id => {
 try {
-  let stmt = `SELECT *  FROM products where  id = ${id}`;
+  let stmt = `SELECT *  FROM products where  product_id = ${id}`;
   const rows = await db.all(stmt);
   const products = rows[0];
   if (!products) {
@@ -50,7 +50,7 @@ try {
 const deleteProducts = async (id)  => {
     try {
       const result = await db.run(
-        SQL`Delete FROM products where id = ${id}`
+        SQL`Delete FROM products where product_id = ${id}`
       );
       if (result.stmt.changes === 0) {
         throw new Error(`could not delete product with id = ${id} or wrong id`);
@@ -68,7 +68,7 @@ const deleteProducts = async (id)  => {
       throw new Error("you must provide an id and/or one of the inputs");
     }
     const date = nowForSQLite();
-      const stmt = `UPDATE products SET date=("${date}"), title=("${title}"), image_name=("${image_name}"), price=(${price}), description=("${description}"), category_id=(${category_id}), is_featured=(${is_featured}) WHERE id=(${id})`;
+      const stmt = `UPDATE products SET date=("${date}"), title=("${title}"), image_name=("${image_name}"), price=(${price}), description=("${description}"), category_id=(${category_id}), is_featured=(${is_featured}) WHERE product_id=(${id})`;
       console.log(stmt)
       const result = await db.all(stmt);
       return (result);
@@ -81,19 +81,14 @@ const deleteProducts = async (id)  => {
 
   const createProducts = async (props) => {
     const { title, image_name, price, description, category_id, is_featured} = props;
-   // console.log("createC", props)
     try {
-    if (!props  || !title || !price ||!image_name || !description || ! category_id || !is_featured) {
+    if (!props  || !title || !price ||!image_name || !description || !category_id || !is_featured) {
       throw new Error("you must provide all the fields");
     }
       const date = nowForSQLite();
       const stmt = `INSERT INTO products (date, title, image_name, price, description, category_id, is_featured) VALUES ("${date}", "${title}", "${image_name}", ${price}, "${description}", ${category_id}, ${is_featured})`;
-      // const stmt =  `INSERT INTO products (date, title, image_name, price, descripition, category_id, is_featured)
-      // VALUES (${'2025-12-12'}, ${'Hello world'}, ${'jsdja'}, ${21}, ${'s21312'},${1}, ${'1'})`;
       console.log(stmt)
       const rows = await db.run(stmt);
-     // console.log("results:", rows)
-     // console.log("error:", err.message);
       const id = rows.stmt.lastID;
       return id;
     }catch(err){

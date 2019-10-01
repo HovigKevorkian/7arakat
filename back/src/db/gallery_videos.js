@@ -38,7 +38,7 @@ const joinSQLStatementKeys = (keys, values, delimiter , keyValueSeparator='=') =
 
   const getVideo = async id => {
     try {
-      let stmt = `SELECT id AS id, link_url FROM gallery_videos where id = ${id}`;
+      let stmt = `SELECT gallery_videos_id AS id, link_url FROM gallery_videos where id = ${id}`;
 
       const rows = await db.all(stmt);
 
@@ -55,7 +55,7 @@ const joinSQLStatementKeys = (keys, values, delimiter , keyValueSeparator='=') =
     const deleteGalleryVideos = async (id)  => {
         try {
           const result = await db.run(
-            SQL`Delete FROM gallery_videos where id = ${id}`
+            SQL`Delete FROM gallery_videos where gallery_videos_id = ${id}`
           );
           if (result.stmt.changes === 0) {
             throw new Error(`could not delete video with id = ${id} or wrong id`);
@@ -91,7 +91,7 @@ const joinSQLStatementKeys = (keys, values, delimiter , keyValueSeparator='=') =
           throw new Error("you must provide an id or an url");
         }
         try {
-          const stmt = SQL`UPDATE gallery_videos SET link_url=(${link}) WHERE id=(${id})`;
+          const stmt = SQL`UPDATE gallery_videos SET link_url=(${link}) WHERE gallery_videos_id=(${id})`;
           const result = await db.all(stmt);
           return (result);
         } catch (err) {

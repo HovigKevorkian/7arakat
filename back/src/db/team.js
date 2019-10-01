@@ -38,13 +38,13 @@ const nowForSQLite = () => new Date().toISOString().replace('T',' ').replace('Z'
 
   const getTeamMember = async id => {
     try {
-      let stmt = `SELECT *FROM team where id = ${id}`;
+      let stmt = `SELECT *FROM team where team_id = ${id}`;
 
       const rows = await db.all(stmt);
 
       const member = rows[0];
       if (!member) {
-        throw new Error(` team member with id = ${id} doesnt exist`);
+        throw new Error(` team member with team_id = ${id} doesnt exist`);
       } else return member;
     } catch (err) {
       throw new Error(`could not get  the team member with id = ${id}` + err.message);
@@ -54,7 +54,7 @@ const nowForSQLite = () => new Date().toISOString().replace('T',' ').replace('Z'
     const deleteTeamMember = async (id)  => {
         try {
           const result = await db.run(
-            SQL`Delete FROM team where id = ${id}`
+            SQL`Delete FROM team where team_id = ${id}`
           );
           if (result.stmt.changes === 0) {
             throw new Error(`could not delete team member with id = ${id} or wrong id`);
@@ -88,12 +88,11 @@ const nowForSQLite = () => new Date().toISOString().replace('T',' ').replace('Z'
   
       const updateTeamMembers = async (id,  props) => {
         const {image_name, member_name, position, facebook_link, gmail_link} = props;
-        // if (!id || !(id ||  (!image_name || !member_name || !position || !facebook_link || !gmail_link))  ||  (!image_name || !member_name || !position || !facebook_link || !gmail_link)) {
           if (!id || !(id ||  !props)  ||  !props) {
           throw new Error("you must provide an id and/or one of the inputs");
         }
         try {
-          const stmt = SQL`UPDATE team SET image_name=(${image_name}), member_name=(${member_name}), position=(${position}), facebook_link=(${facebook_link}), gmail_link=(${gmail_link}) WHERE id=(${id})`;
+          const stmt = SQL`UPDATE team SET image_name=(${image_name}), member_name=(${member_name}), position=(${position}), facebook_link=(${facebook_link}), gmail_link=(${gmail_link}) WHERE team_id=(${id})`;
           const result = await db.all(stmt);
           return (result);
         } catch (err) {
